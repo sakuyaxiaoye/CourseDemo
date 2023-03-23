@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="zysy.iflytek.coursedemo.edu.mapper.ICourseMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="zysy.iflytek.coursedemo.edu.entity.Course">
+        <id column="id" property="id" />
+        <result column="course_cno" property="courseCno" />
+        <result column="course_name" property="courseName" />
+        <result column="parent_id" property="parentId" />
+        <result column="teacher_id" property="teacherId" />
+        <result column="recruits_plan" property="recruitsPlan" />
+        <result column="recruits_actual" property="recruitsActual" />
+        <result column="recruits_request" property="recruitsRequest" />
+        <result column="is_valid" property="isValid" />
+        <result column="is_deleted" property="isDeleted" />
+        <result column="sort" property="sort" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+    <resultMap id="list" type="zysy.iflytek.coursedemo.edu.vo.CourseVO" extends="BaseResultMap">
+        <result column="name" property="teacherName"/>
+    </resultMap>
+
+    <select id="list" resultMap="list">
+        select ec.*, tch.name
+        from edu_course ec
+        left join sys_teacher tch on ec.teacher_id = tch.id
+    </select>
+
+    <resultMap id="TeacherMap" extends="BaseResultMap" type="zysy.iflytek.coursedemo.edu.vo.CourseTeacherVO">
+        <association property="teacher" columnPrefix="tch_" resultMap="zysy.iflytek.coursedemo.sys.mapper.ITeacherMapper.BaseResultMap"/>
+    </resultMap>
+    <select id="listTeacherVO" resultMap="TeacherMap">
+    SELECT crs.*,  tch.id tch_id, tch.work_no tch_work_no, tch.name tch_name, tch.sex tch_sex,
+    tch.    mobile tch_mobile, tch.create_time tch_create_time, tch.update_time tch_update_time, tch.is_deleted tch_is_deleted
+    FROM edu_course crs
+    LEFT JOIN sys_teacher tch ON tch.id = crs.teacher_id
+    </select>
+
+
+</mapper>
